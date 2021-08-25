@@ -160,9 +160,11 @@ fn main() -> Result<(), Error> {
             fs::write(source_file, fixes)?;
         }
 
-        println!(
+        log::info!(
             "[{}]: suggestions processed {}, of which successful: {}",
-            iterations, new_suggestions_processed, new_suggestions_processed_successfully
+            iterations,
+            new_suggestions_processed,
+            new_suggestions_processed_successfully
         );
 
         suggestions_processed += new_suggestions_processed;
