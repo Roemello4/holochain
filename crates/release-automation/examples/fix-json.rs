@@ -144,7 +144,7 @@ fn main() -> Result<(), Error> {
                 eprintln!("Failed to apply suggestion to {:?}: {}", &source_file, e);
             }
         }
-        // let fixes = fix.finish()?;
+        let fixes = fix.finish()?;
         // fs::write(source_file, fixes)?;
     }
 
