@@ -145,7 +145,7 @@ fn main() -> Result<(), Error> {
             }
         }
         let fixes = fix.finish()?;
-        // fs::write(source_file, fixes)?;
+        fs::write(source_file, fixes)?;
     }
 
     Ok(())
