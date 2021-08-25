@@ -14,22 +14,24 @@ fn main() -> Result<(), Error> {
         fs::read_to_string(&suggestions_file)?
     };
 
-    // let suggestions_json: Vec<serde_json::Value> = serde_json::from_str(&suggestions).unwrap();
-    // let suggestions_json_filtered: Vec<serde_json::Value> = suggestions_json
-    //     .into_iter()
-    //     .filter(|v| {
-    //         if let serde_json::Value::Object(m) = v {
-    //             m.contains_key("message")
-    //         } else {
-    //             false
-    //         }
-    //     })
-    //     .collect();
-    // let suggestions_filtered = serde_json::to_string(&suggestions_json_filtered)?;
+    let suggestions_json: Vec<serde_json::Value> = serde_json::from_str(&suggestions).unwrap();
+    let suggestions_json_filtered: Vec<serde_json::Value> = suggestions_json
+        .into_iter()
+        .filter(|v| {
+            if let serde_json::Value::Object(m) = v {
+                m.contains_key("message")
+            } else {
+                false
+            }
+        })
+        .collect();
+    let suggestions_filtered = serde_json::to_string_pretty(&suggestions_json_filtered)?;
+
+    std::fs::write("filtered.json", &suggestions_filtered)?;
 
     let suggestions = rustfix::get_suggestions_from_json(
-        // &suggestions_filtered,
-        &suggestions,
+        &suggestions_filtered,
+        // &suggestions,
         &HashSet::new(),
         rustfix::Filter::MachineApplicableOnly,
     )
