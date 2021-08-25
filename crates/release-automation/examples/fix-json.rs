@@ -169,6 +169,8 @@ fn main() -> Result<(), Error> {
         suggestions_processed_successfully += new_suggestions_processed_successfully;
     }
 
+    std::fs::remove_file("clippy.json");
+
     log::info!(
         "{} iterations. suggestions processed {}, of which successful: {}",
         iterations,
