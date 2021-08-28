@@ -675,7 +675,7 @@ where
     ) -> ConductorResult<(InstalledApp, AppStatusFx)> {
         Ok(self
             .update_state_prime(move |mut state| {
-                let (app, delta) = state.transition_app_status(&app_id, transition)?.clone();
+                let (app, delta) = state.transition_app_status(app_id, transition)?.clone();
                 let app = app.clone();
                 Ok((state, (app, delta)))
             })
@@ -795,7 +795,7 @@ where
                         dna_def
                             .zomes
                             .iter()
-                            .map(|(zome_name, zome)| Ok(zome.wasm_hash(&zome_name)?))
+                            .map(|(zome_name, zome)| Ok(zome.wasm_hash(zome_name)?))
                     })
                     .collect::<ConductorResult<HashSet<_>>>()?;
 

@@ -79,7 +79,7 @@ async fn app_validation_workflow_inner(
         let (op, op_hash) = so.into_inner();
 
         // Validate this op
-        let outcome = validate_op(op.clone(), &conductor_api, workspace, &network)
+        let outcome = validate_op(op.clone(), &conductor_api, workspace, network)
             .await
             // Get the outcome or return the error
             .or_else(|outcome_or_err| outcome_or_err.try_into())?;
@@ -327,7 +327,7 @@ pub async fn get_zomes_to_invoke(
 ) -> AppValidationOutcome<ZomesToInvoke> {
     let aet = { get_app_entry_type(element, cascade).await? };
     match aet {
-        Some(aet) => Ok(ZomesToInvoke::One(get_zome(&aet, &dna_def)?)),
+        Some(aet) => Ok(ZomesToInvoke::One(get_zome(&aet, dna_def)?)),
         None => match element.header() {
             Header::CreateLink(_) | Header::DeleteLink(_) => {
                 get_link_zome(element, dna_def, cascade).await

@@ -70,7 +70,7 @@ fn check_fmt(path: &std::path::Path) {
 
 fn main() {
     println!("cargo:rerun-if-env-changed=FIX_SQL_FMT");
-    for sql in find_sql(&std::path::Path::new(SQL_DIR)) {
+    for sql in find_sql(std::path::Path::new(SQL_DIR)) {
         check_fmt(&sql);
     }
 }

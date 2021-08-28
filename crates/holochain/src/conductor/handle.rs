@@ -74,7 +74,7 @@ use holochain_conductor_api::JsonDump;
 use holochain_p2p::event::HolochainP2pEvent;
 use holochain_p2p::event::HolochainP2pEvent::*;
 use holochain_p2p::DnaHashExt;
-use holochain_p2p::HolochainP2pCell;
+
 use holochain_p2p::HolochainP2pCellT;
 use holochain_sqlite::db::DbKind;
 use holochain_state::host_fn_workspace::HostFnWorkspace;
@@ -917,7 +917,7 @@ impl<DS: DnaStore + 'static> ConductorHandleT for ConductorHandleImpl<DS> {
             .conductor
             .write()
             .await
-            .transition_app_status(&app_id, AppStatusTransition::Enable)
+            .transition_app_status(app_id, AppStatusTransition::Enable)
             .await?;
         let errors = self
             .process_app_status_fx(delta, Some(vec![app_id.to_owned()].into_iter().collect()))
@@ -935,7 +935,7 @@ impl<DS: DnaStore + 'static> ConductorHandleT for ConductorHandleImpl<DS> {
             .conductor
             .write()
             .await
-            .transition_app_status(&app_id, AppStatusTransition::Disable(reason))
+            .transition_app_status(app_id, AppStatusTransition::Disable(reason))
             .await?;
         self.process_app_status_fx(delta, Some(vec![app_id.to_owned()].into_iter().collect()))
             .await?;
@@ -948,7 +948,7 @@ impl<DS: DnaStore + 'static> ConductorHandleT for ConductorHandleImpl<DS> {
             .conductor
             .write()
             .await
-            .transition_app_status(&app_id, AppStatusTransition::Start)
+            .transition_app_status(app_id, AppStatusTransition::Start)
             .await?;
         self.process_app_status_fx(delta, Some(vec![app_id.to_owned()].into_iter().collect()))
             .await?;
@@ -966,7 +966,7 @@ impl<DS: DnaStore + 'static> ConductorHandleT for ConductorHandleImpl<DS> {
             .conductor
             .write()
             .await
-            .transition_app_status(&app_id, AppStatusTransition::Pause(reason))
+            .transition_app_status(app_id, AppStatusTransition::Pause(reason))
             .await?;
         self.process_app_status_fx(delta, Some(vec![app_id.clone()].into_iter().collect()))
             .await?;
@@ -1301,15 +1301,14 @@ impl<DS: DnaStore + 'static> ConductorHandleImpl<DS> {
         // Join the network but ignore errors because the
         // space retries joining all cells every 5 minutes.
 
-        let pending_cells: Vec<(CellId, HolochainP2pCell)> = self
+        
+
+        let tasks = self
             .conductor
             .read()
             .await
             .pending_cells()
             .map(|(id, cell)| (id.clone(), cell.holochain_p2p_cell().clone()))
-            .collect();
-
-        let tasks = pending_cells.into_iter()
             .map(|(cell_id, network)| async move {
                 match tokio::time::timeout(JOIN_NETWORK_TIMEOUT, network.join()).await {
                     Ok(Err(e)) => {

@@ -468,7 +468,7 @@ impl SourceChain {
                 if is_chain_locked(txn, &hashed_preflight_request)? {
                     return Err(SourceChainError::ChainLocked);
                 }
-                let (persisted_head, persisted_seq, _) = chain_head_db(&txn, author)?;
+                let (persisted_head, persisted_seq, _) = chain_head_db(txn, author)?;
                 let countersigning_agent_state =
                     CounterSigningAgentState::new(agent_index, persisted_head, persisted_seq);
                 lock_chain(
@@ -614,7 +614,7 @@ impl SourceChain {
         self.vault
             .async_commit(move |txn: &mut Transaction| {
                 // As at check.
-                let (new_persisted_head, _, _) = chain_head_db(&txn, author)?;
+                let (new_persisted_head, _, _) = chain_head_db(txn, author)?;
                 if headers.last().is_none() {
                     // Nothing to write
                     return Ok(());
