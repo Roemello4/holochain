@@ -1301,12 +1301,8 @@ impl<DS: DnaStore + 'static> ConductorHandleImpl<DS> {
         // Join the network but ignore errors because the
         // space retries joining all cells every 5 minutes.
 
-        
-
-        let tasks = self
-            .conductor
-            .read()
-            .await
+        let read_guard = self.conductor.read().await;
+        let tasks = read_guard
             .pending_cells()
             .map(|(id, cell)| (id.clone(), cell.holochain_p2p_cell().clone()))
             .map(|(cell_id, network)| async move {
